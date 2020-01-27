@@ -6,8 +6,8 @@ const express = require('express'),
 require('dotenv').config();
 
 /** Application Modules**/
-const driver = require('./systems/driver/route')
-const car = require('./systems/car/route')
+const driver = require('./src/systems/driver/route')
+const car = require('./src/systems/car/route')
 
 const app = express()
 app.use(cors())
@@ -38,15 +38,16 @@ app.use('/api/parkme/cars', car)
 /** Catch 404 and forward to error handler */
 app.use(function (req, res, next) {
     const err = new Error('Not Found')
+    err.status = 404;
     next(err)
 });
 
 // error handler
-app.use(function (err, req, res) {
-    // console.log("NODE SERVER ERROR: ", err);
-    const errorResponse = { error: true, message: err.message };
-    console.log(errorResponse)
-    res.status(500).json(errorResponse)
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+    // console.log("NODE SERVER ERROR: ", err); 
+    const errorResponse = { message: err.message };
+    res.status(err.status).send(errorResponse);
 });
 
 module.exports = app
