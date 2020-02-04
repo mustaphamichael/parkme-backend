@@ -8,6 +8,7 @@ require('dotenv').config();
 /** Application Modules**/
 const driver = require('./src/systems/driver/route')
 const car = require('./src/systems/car/route')
+const hub = require('./src/systems/hub/route')
 
 const app = express()
 app.use(cors())
@@ -34,6 +35,7 @@ mongoose
 /** Routes */
 app.use('/api/parkme/drivers', driver)
 app.use('/api/parkme/cars', car)
+app.use('/api/parkme/hubs', hub)
 
 /** Catch 404 and forward to error handler */
 app.use(function (req, res, next) {

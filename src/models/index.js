@@ -1,4 +1,6 @@
 module.exports = {
     Car: require('./car'),
-    Driver: require('./driver')
+    Driver: require('./driver'),
+    Hub: require('./hub'),
+    Slot: require('./slot')
 }
