@@ -23,7 +23,7 @@ module.exports.create = async (req, res) => {
 
 module.exports.getAll = async (req, res) => {
     const { limit, page } = req.query
-    const drivers = await Driver.find(req.body)
+    const drivers = await Driver.find()
         .limit(parseInt(limit) || 20)
         .skip(parseInt(page) > 0 ? ((parseInt(page) - 1) * parseInt(limit)) : 0)
         .catch(err => { return res.status(500).send(error(err.message)) })
