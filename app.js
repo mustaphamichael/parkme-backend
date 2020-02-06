@@ -17,19 +17,16 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 /** Database Connection */
-const dbUri = `mongodb://${process.env.MONGO_HOST}/${process.env.MONGO_DB}`
-mongoose
-    .connect(dbUri, {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
-        useUnifiedTopology: true,
-        poolSize: 10,
-        keepAlive: true,
-        keepAliveInitialDelay: 300000,
-        socketTimeoutMS: 480000
-    })
-    .then(() => console.log("DB connection successful"))
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+    poolSize: 10,
+    keepAlive: true,
+    keepAliveInitialDelay: 300000,
+    socketTimeoutMS: 480000
+}).then(() => console.log("DB connection successful"))
     .catch(error => console.log(`DB_CONNECTION_ERROR :: ${error}`))
 
 /** Routes */
