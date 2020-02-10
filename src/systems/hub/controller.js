@@ -52,9 +52,6 @@ module.exports.createSlot = async (req, res) => {
 
     const slot = await Slot.create({ ...req.body, hub: hub._id })
         .catch(err => { return res.status(500).send(error(err.message)) }) // Create a slot assocaiated to a hub
-    // Update hub model with new slot
-    hub.slots.push(slot)
-    hub.save()
     res.status(201).send(success('Slot created successfully', slot))
 }
 
