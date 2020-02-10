@@ -9,6 +9,7 @@ require('dotenv').config();
 const driver = require('./src/systems/driver/route')
 const car = require('./src/systems/car/route')
 const hub = require('./src/systems/hub/route')
+const terminal = require('./src/systems/terminal/route')
 
 const app = express()
 app.use(cors())
@@ -33,6 +34,7 @@ mongoose.connect(process.env.MONGO_URL, {
 app.use('/api/parkme/drivers', driver)
 app.use('/api/parkme/cars', car)
 app.use('/api/parkme/hubs', hub)
+app.use('/api/parkme/terminals', terminal)
 
 /** Catch 404 and forward to error handler */
 app.use(function (req, res, next) {
