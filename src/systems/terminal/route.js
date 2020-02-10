@@ -17,4 +17,7 @@ router.delete("/:id", (req, res) => controller.delete(req, res))
 // Get number of registered terminals
 router.get("/system/count", (_, res) => controller.getCount(res))
 
+// Get a free slot closest to the destination
+router.get("/:id/freeslot", (req, res) => controller.getFreeSlot(req, res))
+
 module.exports = router

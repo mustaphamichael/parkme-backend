@@ -1,5 +1,5 @@
 const { check, validationResult } = require("express-validator"),
-    { Terminal } = require("../../models"),
+    { Hub, Terminal } = require("../../models"),
     { error, success } = require("../../utils/response")
 
 module.exports.create = async (req, res) => {
@@ -44,4 +44,25 @@ module.exports.delete = async (req, res) => {
 
     const cDelete = await Terminal.findOneAndRemove(req.params.id).catch(err => { return res.status(500).send(error(err.message)) });
     (cDelete) ? res.send(success('Delete terminal successful')) : res.status(404).send(error('Terminal not found'))
+}
+
+module.exports.getFreeSlot = async (req, res) => {
+    // 1. Sort out the hubs in the order of their distances
+    const hubs = (await Terminal.findOne({ "_id": req.params.id })
+        .populate("distances").sort("distances")).distances
+        .map(i => i.hub)
+
+    // Iterate through each hub
+    // Return a free slot if available and stop the loop
+    for (hub of hubs) {
+        // Fetch each slot status
+        const { tag, slots } = (await Hub.findOne({ "_id": hub }).populate("slots"))
+        const free = slots.filter(s => s.status === 0)
+        if (!free.isEmpty) {
+            const message = `Kindly park your vehicle at HUB ${tag}: SLOT ${free[0].tag}`
+            res.send(success(message))
+            break // Stop the loop
+        }
+        return res.send(success("There is no parking slot available"))
+    }
 }
