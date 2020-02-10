@@ -7,6 +7,7 @@ require('dotenv').config();
 
 /** Application Modules**/
 const driver = require('./src/systems/driver/route')
+const distance = require('./src/systems/distance/route')
 const car = require('./src/systems/car/route')
 const hub = require('./src/systems/hub/route')
 const terminal = require('./src/systems/terminal/route')
@@ -32,6 +33,7 @@ mongoose.connect(process.env.MONGO_URL, {
 
 /** Routes */
 app.use('/api/parkme/drivers', driver)
+app.use('/api/parkme/distances', distance)
 app.use('/api/parkme/cars', car)
 app.use('/api/parkme/hubs', hub)
 app.use('/api/parkme/terminals', terminal)
