@@ -19,9 +19,6 @@ module.exports.create = async (req, res) => {
     if (existingCars.length > 0) return res.status(409).send(error('You have a car with this number plate'))
 
     const car = await Car.create({ ...req.body, driver: driver._id }).catch(err => { return res.status(500).send(error(err.message)) }) // Create a car assocaiated to a driver
-    // Update driver model with new car
-    driver.cars.push(car)
-    driver.save()
     res.status(201).send(success('Car created successfully', car))
 }
 

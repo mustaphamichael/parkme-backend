@@ -14,9 +14,6 @@ module.exports.create = async (req, res) => {
     const driver = await Driver.create(req.body).catch(err => { return res.status(500).send(error(err.message)) })
     if (driver._id) {
         const car = await Car.create({ ...req.body.car, driver: driver._id }).catch(err => { return res.status(500).send(error(err.message)) }) // Create a car assocaiated to a driver
-        // Update driver model with new car
-        driver.cars.push(car)
-        driver.save()
         res.status(201).send(success('Driver created successfully', { ...driver._doc, cars: [car] }))
     }
 }
