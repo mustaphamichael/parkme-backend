@@ -10,15 +10,15 @@ const DistanceSchema = new Schema({
 
 // Update the terminal distance
 DistanceSchema.post("save", async (doc) => {
-    const terminal = await Terminal.findOne(doc.terminal).catch(e => console.log("DB_ERROR ::", e))
-    terminal.distances.push(doc._id)
-    terminal.save()
-    console.log("Updated terminal", terminal.name)
+    await Terminal.updateOne({ "_id": doc.terminal },
+        { $push: { distances: doc._id } }) // Push distance to terminal
+        .catch(e => console.log("DB_ERROR ::", e))
+    console.log("Updated terminal", doc.terminal.name)
 })
 
 // Remove distance from terminal
 DistanceSchema.post("findOneAndRemove", async (doc) => {
-    await Terminal.update({ "_id": doc.terminal },
+    await Terminal.updateOne({ "_id": doc.terminal },
         { $pull: { distances: { $in: [doc._id] } } })
         .catch(e => console.log("DB_ERROR ::", e))
     console.log("Deleted distance")
