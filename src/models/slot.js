@@ -9,18 +9,19 @@ const SlotSchema = new Schema({
 })
 
 // Update hub slots array
-SlotSchema.post("save", async (doc) => {
-    await Hub.updateOne({ "_id": doc.hub },
-        { $push: { distances: doc._id } }) // Push distance to terminal
+SlotSchema.post("save", (doc) => {
+    Hub.updateOne({ "_id": doc.hub },
+        { $push: { slots: doc._id } }) // Push slots to hubs
+        .then(console.log('Updated hub', doc.hub.tag))
         .catch(e => console.log("SLOT_MIDWARE_ERR ::", e))
-    console.log('Updated hub', doc.hub.tag)
 })
 
 // Remove slot from hub
-SlotSchema.post("findOneAndRemove", async (doc) => {
-    await Hub.updateOne({ "_id": doc.hub },
+SlotSchema.post("findOneAndRemove", (doc) => {
+    Hub.updateOne({ "_id": doc.hub },
         { $pull: { slots: { $in: [doc._id] } } })
+        .then(console.log("Deleted slot"))
         .catch(e => console.log("DB_ERROR ::", e))
-    console.log("Deleted slot")
+
 })
 module.exports = mongoose.model('Slot', SlotSchema)

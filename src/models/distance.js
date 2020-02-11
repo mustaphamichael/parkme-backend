@@ -9,18 +9,18 @@ const DistanceSchema = new Schema({
 })
 
 // Update the terminal distance
-DistanceSchema.post("save", async (doc) => {
-    await Terminal.updateOne({ "_id": doc.terminal },
+DistanceSchema.post("save", (doc) => {
+    Terminal.updateOne({ "_id": doc.terminal },
         { $push: { distances: doc._id } }) // Push distance to terminal
+        .then(console.log("Updated terminal", doc.terminal.name))
         .catch(e => console.log("DB_ERROR ::", e))
-    console.log("Updated terminal", doc.terminal.name)
 })
 
 // Remove distance from terminal
 DistanceSchema.post("findOneAndRemove", async (doc) => {
-    await Terminal.updateOne({ "_id": doc.terminal },
+    Terminal.updateOne({ "_id": doc.terminal },
         { $pull: { distances: { $in: [doc._id] } } })
+        .then(console.log("Deleted distance"))
         .catch(e => console.log("DB_ERROR ::", e))
-    console.log("Deleted distance")
 })
 module.exports = mongoose.model("Distance", DistanceSchema)
