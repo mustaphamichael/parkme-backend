@@ -20,4 +20,7 @@ router.get("/system/count", (_, res) => controller.getCount(res))
 // Get a free slot closest to the destination
 router.get("/:id/freeslot", (req, res) => controller.getFreeSlot(req, res))
 
+// Handle driver's acceptance of allocated slot
+router.post("/selection/accept", (req, res) => controller.handleDriverSelection(req, res))
+
 module.exports = router
