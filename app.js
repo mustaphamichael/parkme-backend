@@ -11,6 +11,7 @@ const distance = require('./src/systems/distance/route')
 const car = require('./src/systems/car/route')
 const hub = require('./src/systems/hub/route')
 const terminal = require('./src/systems/terminal/route')
+const navigation = require('./src/systems/navigation/route')
 
 const app = express()
 app.use(cors())
@@ -37,6 +38,7 @@ app.use('/api/parkme/distances', distance)
 app.use('/api/parkme/cars', car)
 app.use('/api/parkme/hubs', hub)
 app.use('/api/parkme/terminals', terminal)
+app.use('/api/parkme/navigation', navigation)
 
 /** Catch 404 and forward to error handler */
 app.use(function (req, res, next) {
