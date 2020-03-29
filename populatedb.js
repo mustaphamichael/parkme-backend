@@ -12,7 +12,7 @@ mongoose.connect(process.env.MONGO_URL,
     .catch(error => console.log(`Database connection Error: ${error}`))
 
 /** Seed hubs */
-const mHubs = [{ tag: "A" }, { tag: "B" }, { tag: "C" }] // Collection of slots
+const mHubs = [{ tag: "A" }, { tag: "B" }, { tag: "C" }, { tag: "D" }] // Collection of slots
 const mClusters = [{ tag: "1" }, { tag: "2" }, { tag: "3" }] // Colection of terminals/destinations
 
 /** Seed slots and their hubs 
@@ -52,7 +52,7 @@ const seedTerminals = async (clusters) => {
 const seedDistance = async (clusters, hubs) => {
     // the distance between each cluster and hubs. Parent array for the clusters
     // while the children holds the distance value
-    const distances = [[25.2, 10.5, 25.0], [15.8, 15.8, 28.3], [10.6, 25.2, 25.0]]
+    const distances = [[25.2, 10.5, 10.5, 20.1], [15.8, 15.8, 28.3, 28.3], [10.6, 25.2, 21.0, 10.6]]
     let count = 0
     for (const cluster in clusters) {
         for (const no in hubs) {
