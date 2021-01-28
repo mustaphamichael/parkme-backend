@@ -52,14 +52,19 @@ function onListening() {
 const wss = new WebSocket.Server({ server })
 wss.on('connection', (ws) => {
     console.log("Connected!")
-    socketFn.connection(ws)
-    ws.send("Welcome");
-    
+
     // Keep Alive
+    ws.isAlive = true
     ws.on('ping', function () {
         ws.send("pong")
         this.isAlive = true
     });
+    ws.on('pong', function () {
+        this.isAlive = true
+    })
+
+    socketFn.connection(ws)
+    ws.send("Welcome");
 })
 
 const interval = setInterval(function ping() {

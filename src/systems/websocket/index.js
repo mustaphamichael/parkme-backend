@@ -3,42 +3,40 @@ const { Hub, Slot } = require("../../models")
 module.exports.connection = (ws) => {
     ws.on('message', (message) => {
         console.log("received: ", message)
-        ws.send(Date.now())
+        ws.send(`Time Received: ${Date.now()}`)
+        parseMessage(message)
+    })
+}
 
-        const task = message.split[0]
-        const payload = message.split[1]
-
-        console.log(typeof message)
+function parseMessage(message) {
+    try {
+        const messageJson = JSON.parse(message)
+        const task = messageJson[0]
+        const payload = messageJson[1]
 
         switch (task) {
             case "iot_connection": console.log("Device connected :-", payload)
                 break
             case "iot_status": {
-                const key = Object.keys(payload)
+                const key = Object.keys(payload)[0]
                 const status = payload[key]
-                switch (key) {
-                    case "A1":
-                        editSlot("A", "1", status)
-                        break
-                    case "B1":
-                        editSlot("B", "1", status)
-                        break
-                    case "C2":
-                        editSlot("C", "2", status)
-                        break
-                }
+                updateSlotStatus(key, status)
             }
         }
-    })
+    } catch (error) {
+        // DO NOTHING
+    }
 }
 
-// Update the status of the slot based on sensor message
-async function editSlot(hubTag, slotTag, status) {
+async function updateSlotStatus(slot, status) {
+    const hubTag = slot[0]
+    const slotNum = slot[1]
+
     const hub = await Hub.findOne({ 'tag': hubTag }).populate('slots').catch(err => console.log(err))
     if (hub) {
-        const slot = await Slot.findOneAndUpdate({ $and: [{ 'tag': slotTag }, { 'hub': hub._id }] }, { status: status })
-            .catch(console.log(err.message));
-        return (slot) ? console.log("SLOT UPDATE :: Edit slot successful") : console.log("SLOT UPDATE :: Slot not found")
+        const slot = await Slot.findOneAndUpdate({ $and: [{ 'tag': slotNum }, { 'hub': hub._id }] }, { status: status })
+            .catch(err => console.log(err.message));
+        return (slot) ? console.log("Slot status updated successful") : console.log("Slot not found")
     }
-    console.log("SLOT UPDATE :: This hub does not exist")
+    console.log("This hub does not exist")
 }
